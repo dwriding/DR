@@ -1,0 +1,86 @@
+body {
+    background-color: #2C5F2D; /* tennis green */
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #3D0C11; /* wimbledon purple */
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: #FFFFFF;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header {
+    text-align: center;
+    padding: 30px;
+}
+
+.main-photo {
+    width: 300px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.7);
+}
+
+.content-block {
+    padding: 30px;
+    margin: 20px;
+    background-color: #3D0C11;
+    border-radius: 20px;
+}
+
+h1, h2 {
+    color: #A7D129; /* light tennis green for headings */
+}
+
+.action-photo {
+    width: 400px;
+    margin-top: 20px;
+    border-radius: 15px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #3D0C11;
+    margin-top: 40px;
+}
+
+ul, ol {
+    margin-left: 20px;
+}
+
+/* Extra style ideas */
+iframe {
+    border-radius: 15px;
+}
+
+.tableauPlaceholder {
+    margin-top: 20px;
+}
+
+/* Interactive link hover */
+nav a:hover {
+    text-decoration: underline;
+}
+
+#backButton {
+    margin-top: 10px;
+    background-color: #800080;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+#backButton:hover {
+    background-color: #993399;
+}

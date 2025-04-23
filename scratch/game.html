@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Federer Tennis Game</title>
+    <style>
+        body {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            font-family: sans-serif;
+        }
+        canvas {
+            background: #2E8B57;
+            display: block;
+            margin: 20px auto;
+            border: 5px solid #fff;
+        }
+        #gameOverMessage {
+            display: none;
+            color: red;
+            font-size: 30px;
+        }
+        #playAgainButton {
+            display: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        #playAgainButton:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+        <h1>🎾 Federer Tennis Game 🎾</h1>
+        <p>Move Federer left and right with the arrow keys to hit the falling tennis balls!</p>
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        <p id="gameOverMessage">Game Over! You missed 3 balls.</p>
+        <button id="playAgainButton">Play Again</button>
+        
+        <!-- New Back to Fan Page Button -->
+        <br><br>
+        <a href="index.html">
+            <button id="backButton">Back to Federer Fan Page</button>
+        </a>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const playAgainButton = document.getElementById('playAgainButton');
+        const gameOverMessage = document.getElementById('gameOverMessage');
+
+        let player = {
+            x: 270,
+            y: 300,
+            width: 40,
+            height: 80,
+            speed: 25,  // Increased player speed
+        };
+
+        let ball = {
+            x: Math.random() * 580,
+            y: 0,
+            radius: 10,
+            speed: 4, // Falling speed of the ball
+        };
+
+        let score = 0;
+        let missedBalls = 0;  // Track missed balls
+
+        function drawPlayer() {
+            // Draw Federer (blocky player)
+            ctx.fillStyle = '#f1c27d';  // Skin color for head
+            ctx.fillRect(player.x + 10, player.y, 20, 20); // Head block
+            
+            ctx.fillStyle = '#ffffff'; // White color for shirt
+            ctx.fillRect(player.x, player.y + 20, 40, 40); // Body block
+            
+            ctx.fillStyle = '#ffffff';  // White color for pants
+            ctx.fillRect(player.x, player.y + 60, 20, 20); // Left leg
+            ctx.fillRect(player.x + 20, player.y + 60, 20, 20); // Right leg
+            
+            ctx.fillStyle = '#000000'; // Black color for racket
+            ctx.fillRect(player.x + 25, player.y + 30, 10, 30); // Racket handle
+            ctx.beginPath();
+            ctx.arc(player.x + 30, player.y + 20, 15, 0, Math.PI * 2); // Racket head
+            ctx.fillStyle = '#000000'; // Black racket color
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawBall() {
+            // Draw the ball
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFF00'; // Tennis ball yellow
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawScore() {
+            ctx.font = '20px sans-serif';
+            ctx.fillStyle = '#fff';
+            ctx.fillText('Score: ' + score, 10, 30);
+        }
+
+        function drawMissedBalls() {
+            ctx.font = '20px sans-serif';
+            ctx.fillStyle = '#fff';
+            ctx.fillText('Missed Balls: ' + missedBalls, 10, 60);
+        }
+
+        function moveBall() {
+            ball.y += ball.speed;  // Ball falls down
+            if (ball.y > canvas.height) {
+                // Ball missed - increment missed balls
+                missedBalls++;
+
+                // Reset ball to the top
+                ball.x = Math.random() * (canvas.width - ball.radius * 2);
+                ball.y = 0;
+            }
+        }
+
+        function checkCollision() {
+            // Check if the ball hits Federer
+            if (
+                ball.x > player.x &&
+                ball.x < player.x + player.width &&
+                ball.y + ball.radius > player.y &&
+                ball.y - ball.radius < player.y + player.height
+            ) {
+                score++;  // Increase score on hit
+                ball.x = Math.random() * (canvas.width - ball.radius * 2);  // Reset ball
+                ball.y = 0;
+            }
+        }
+
+        function clearCanvas() {
+            // Clear the canvas before redrawing
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function updateGame() {
+            if (missedBalls >= 3) {
+                // End game if 3 balls are missed
+                gameOverMessage.style.display = "block";
+                playAgainButton.style.display = "inline-block";
+                return;
+            }
+
+            clearCanvas();
+            drawPlayer();
+            drawBall();
+            drawScore();
+            drawMissedBalls();
+            moveBall();
+            checkCollision();
+            requestAnimationFrame(updateGame);  // Keep animating
+        }
+
+        // Move player using arrow keys
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && player.x > 0) {
+                player.x -= player.speed;  // Move left
+            } else if (e.key === 'ArrowRight' && player.x + player.width < canvas.width) {
+                player.x += player.speed;  // Move right
+            }
+        });
+
+        // Play again button functionality
+        playAgainButton.addEventListener('click', () => {
+            // Reset game variables
+            player = {
+                x: 270,
+                y: 300,
+                width: 40,
+                height: 80,
+                speed: 25,  // Reset player speed
+            };
+
+            ball = {
+                x: Math.random() * 580,
+                y: 0,
+                radius: 10,
+                speed: 4, // Reset ball speed
+            };
+
+            score = 0;
+            missedBalls = 0;
+
+            // Hide game over message and button
+            gameOverMessage.style.display = "none";
+            playAgainButton.style.display = "none";
+
+            // Start the game again
+            updateGame();
+        });
+
+        updateGame();  // Start the game
+    </script>
+
+</body>
+</html>
